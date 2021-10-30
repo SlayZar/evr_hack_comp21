@@ -22,6 +22,8 @@ def chronom_read(data_path='data_task1', types='TRAIN'):
     chronom_new.reset_index(inplace=True)
     chronom_new = chronom_new.merge(
         chronom[chronom.VR_NACH > '2020-01-01'].groupby(['NPLV']).agg({'VR_KON': 'max', 'VR_NACH': 'min'}), on='NPLV')
+    chronom_new = chronom_new.merge(
+        chronom.groupby(['NPLV'])['VR_KON'].count().to_frame('num_chronom').reset_index(), on = 'NPLV') 
     chronom_new.columns = [
         'chronom_' +
         str(j) if i > 0 and i < chronom_new.shape[1] -
@@ -98,7 +100,9 @@ def produv_read(data_path='data_task1', types='TRAIN'):
         left_index=True, right_on='level_1').drop(['level_1', 'NPLV_y'], axis=1).rename(columns={'NPLV_x': 'NPLV'})
     produv_new2 = produv_new.groupby(['NPLV']).agg(
         ['mean', 'max', 'median', 'last', 'std'])
-
+    
+    produv_new2 = produv_new2.merge(
+        produv_new.groupby(['NPLV'])['POL'].count().to_frame('num_produv'), left_index=True, right_index=True) 
     new_cols_name = []
     for j in range(produv_new2.shape[1]):
         new_cols_name.append(" ".join(str(i) for i in produv_new2.columns[j]))
@@ -137,7 +141,9 @@ def gas_read(data_path='data_task1', types='TRAIN'):
         gas_new_res = gas_new.groupby(['NPLV']).agg(
             ['mean', 'max', 'median', 'last', 'std'])
         gas_new2 = pd.concat([gas_new2, gas_new_res])
-        
+    
+    gas_new2 = gas_new2.merge(
+        gas1.groupby(['NPLV'])[gas1.columns[4]].count().to_frame('num_gas'), left_index=True, right_index=True) 
     new_cols_name = []
     for j in range(gas_new2.shape[1]):
         new_cols_name.append(" ".join(str(i) for i in gas_new2.columns[j]))
@@ -151,12 +157,15 @@ def gas_read(data_path='data_task1', types='TRAIN'):
 
 # Фичи из файла lom
 def lom_read(data_path='data_task1', types='TRAIN'):
-    lom = pd.read_csv(f'{data_path}/lom_{types.lower()}.csv')
+    lom1 = pd.read_csv(f'{data_path}/lom_{types.lower()}.csv')
     lom = pd.pivot_table(
-        lom,
+        lom1,
         index='NPLV',
         columns='VDL',
         values='VES').reset_index()
+    
+    lom = lom.merge(
+        lom1.groupby(['NPLV'])[lom1.columns[4]].count().to_frame('num_lom'), left_on='NPLV', right_index=True) 
     lom.columns = [
         'lom_' +
         str(j) if j != 'NPLV' else j for i,
@@ -196,6 +205,9 @@ def sip_read(data_path='data_task1', types='TRAIN'):
             'VSSYP',
             'time'],
         aggfunc='median')
+    
+    sip2 = sip2.merge(
+        sip.groupby(['NPLV'])['DAT_OTD'].count().to_frame('num_sip'), left_index=True, right_index=True) 
     new_cols_name = []
     for j in range(sip2.shape[1]):
         new_cols_name.append("_".join(str(i) for i in sip2.columns[j]))
