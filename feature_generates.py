@@ -237,23 +237,23 @@ def time_plavki_feats(all_df):
 
 # Агрегируем все фичи
 def read_all(data_path='data_task1', types='TRAIN'):
-    print("STEP 1 of 7: Chronom features added")
+    print("STEP 1 of 7: GAS features added (~20 minutes for train)")
+    gas_feat = gas_read(data_path, types)
+    print("STEP 2 of 7: Chronom features added")
     chr = chronom_read(data_path, types)
-    print("STEP 2 of 7: Chugun features added")
+    print("STEP 3 of 7: Chugun features added")
     chugun = chugun_read(data_path, types)
     df = chr.merge(chugun, on='NPLV')
-    print("STEP 3 of 7: Produv features added (~4 minutes for train)")
+    print("STEP 4 of 7: Produv features added (~4 minutes for train)")
     produv = produv_read(data_path, types)
     all_df = produv.merge(df, on=['NPLV'], how='left')
     print(all_df.shape)
-    print("STEP 4 of 7: LOM features added")
+    print("STEP 5 of 7: LOM features added")
     lom = lom_read(data_path, types)
-    print("STEP 5 of 7: Plavki features added")
+    print("STEP 6 of 7: Plavki features added")
     plavki = plavki_read(data_path, types)
-    print("STEP 6 of 7: SIP features added")
+    print("STEP 7 of 7: SIP features added")
     sip = sip_read(data_path, types)
-    print("STEP 7 of 7: GAS features added (~20 minutes for train)")
-    gas_feat = gas_read(data_path, types)
     all_df = all_df.merge(gas_feat, on='NPLV', how='left')\
         .merge(lom, on='NPLV', how='left').merge(plavki, on='NPLV', how='left')\
         .merge(sip, on='NPLV', how='left')
