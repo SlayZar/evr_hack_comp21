@@ -245,7 +245,6 @@ def read_all(data_path='data_task1', types='TRAIN'):
     print("STEP 3 of 7: Produv features added (~4 minutes for train)")
     produv = produv_read(data_path, types)
     all_df = produv.merge(df, on=['NPLV'], how='left')
-    all_df = time_plavki_feats(all_df)
     print(all_df.shape)
     print("STEP 4 of 7: LOM features added")
     lom = lom_read(data_path, types)
