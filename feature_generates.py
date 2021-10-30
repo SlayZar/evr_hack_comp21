@@ -26,7 +26,7 @@ def chronom_read(data_path='data_task1', types='TRAIN'):
         chronom.groupby(['NPLV'])['VR_KON'].count().to_frame('num_chronom').reset_index(), on = 'NPLV') 
     chronom_new.columns = [
         'chronom_' +
-        str(j) if i > 0 and i not in ['VR_NACH', 'VR_KON'] else j for i,
+        str(j) if i > 0 and j not in ['VR_NACH', 'VR_KON'] else j for i,
         j in enumerate(
             chronom_new.columns)]
     return chronom_new
