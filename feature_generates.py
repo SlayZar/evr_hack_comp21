@@ -48,7 +48,7 @@ def chugun_read(data_path='data_task1', types='TRAIN'):
 def produv_read(data_path='data_task1', types='TRAIN'):
     produv = pd.read_csv(f'{data_path}/produv_{types.lower()}.csv')
     for i in ['RAS', 'POL']:
-        for d in [2, 4, 6, 10, 25, 50, 100, 500, 1000]:
+        for d in [2, 4, 6, 10, 1000]:
             produv[f'{i}_diff_{d}'] = produv.groupby(['NPLV'])[i].diff(d)
     produv_new = produv.merge(produv.groupby(['NPLV'])['RAS'].rolling(3).max().to_frame('RAS_3_max').reset_index(),
                               left_index=True, right_on='level_1').drop(['level_1', 'NPLV_y'], axis=1).rename(columns={'NPLV_x': 'NPLV'})\
