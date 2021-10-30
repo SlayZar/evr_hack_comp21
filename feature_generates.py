@@ -113,7 +113,9 @@ def produv_read(data_path='data_task1', types='TRAIN'):
 # Фичи из файла gas
 def gas_read(data_path='data_task1', types='TRAIN'):
     gas1 = pd.read_csv(f'{data_path}/gas_{types.lower()}.csv')
-    init_cols = gas1.columns[2:]
+    for i in gas1.columns[2:]:
+        for d in [2, 4, 6, 10]:
+            gas1[f'{i}_diff_{d}'] = gas1.groupby(['NPLV'])[i].diff(d)
     nplvs = gas1.NPLV.unique()
     gas_new2 = pd.DataFrame()
     for nplv in tqdm(nplvs):
@@ -135,13 +137,7 @@ def gas_read(data_path='data_task1', types='TRAIN'):
         gas_new_res = gas_new.groupby(['NPLV']).agg(
             ['mean', 'max', 'median', 'last', 'std'])
         gas_new2 = pd.concat([gas_new2, gas_new_res])
-    
-    for i in init_cols:
-        for d in [2, 4, 6, 10, 25]:
-            gas1[f'{i}_diff_{d}'] = gas1.groupby(['NPLV'])[i].diff(d)
-    gas1 = gas1.groupby(['NPLV']).agg(
-            ['mean', 'max', 'median', 'last', 'std'])
-    gas_new2 = gas_new2.merge(gas1, left_index=True, right_index=True)
+        
     new_cols_name = []
     for j in range(gas_new2.shape[1]):
         new_cols_name.append(" ".join(str(i) for i in gas_new2.columns[j]))
