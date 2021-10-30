@@ -21,3 +21,5 @@
 В ноутбуке предусмотрено сохранение моделей в папку models (можно взять модели оттуда и проскорить данные, не обучая модели заново).
 
 Также результат скоринга сохраняется в папку solutions.
+
+Презентация: https://docs.google.com/presentation/d/1qTszORkDFR5nCedjC2CQLFvpB0RKq5Uj8-QkaYkWUq4/edit?usp=sharing
