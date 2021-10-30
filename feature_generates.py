@@ -262,4 +262,6 @@ def read_all(data_path='data_task1', types='TRAIN'):
     if types == 'TRAIN':
         target = pd.read_csv(f'{data_path}/target_train.csv')
         all_df = all_df.merge(target, on=['NPLV'])
+    all_df = time_plavki_feats(all_df)
+    print(all_df.shape)
     return all_df
