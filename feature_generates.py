@@ -165,7 +165,7 @@ def lom_read(data_path='data_task1', types='TRAIN'):
         values='VES').reset_index()
     
     lom = lom.merge(
-        lom1.groupby(['NPLV'])[lom1.columns[4]].count().to_frame('num_lom'), left_on='NPLV', right_index=True) 
+        lom1.groupby(['NPLV'])[lom1.columns[4]].count().to_frame('num_lom'), left_index=True, right_index=True) 
     lom.columns = [
         'lom_' +
         str(j) if j != 'NPLV' else j for i,
